@@ -1,0 +1,57 @@
+<HEAD>
+<title>Twitter Sentiment Analysis</title>
+</HEAD>
+<BODY>
+<nobr>Sym: <input id="sym">&nbsp;Max Twitts:&nbsp;
+	<select id="maxtwitts">
+		<option value=10>10</option>
+		<option value=20>20</option>
+		<option selected value=50>50</option>
+		<option value=100>100</option>
+		<option value=200>200</option>
+	</select>
+</nobr>
+<div id="tw"></div>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+var socket = null;
+var twitts = [];
+$(document).ready(function() {
+	$('#sym').keydown(function(event) {
+		if (event.which === 13) {
+			$('#tw').html('');
+			if ($.trim($('#sym').val()) != '') {
+				console.log('tracking: %s', $('#sym').val());
+				if (typeof socket === 'undefined' || !socket) {
+					socket = io("http://www.pyfia.com:3000/pftwsym");
+					socket.on('epftwsym', function(data) {
+						//$('#tw').html(data.txt +'<br/>' +'<br/>'+ $('#tw').html());
+						$('#tw').html(showTw(data.txt, twitts, $('#maxtwitts').val()));
+					});				
+				}
+				socket.emit('w', {sym: $('#sym').val()});
+			} else {
+				if (typeof socket === 'undefined' || !socket) return;
+				socket.emit('forceDisconnect');
+				console.log('forceDisconnect emitted to server.');				
+			}
+		}
+	});
+});
+function showTw(tw, ar, mx) {
+	if (typeof tw === 'undefined' || !tw || typeof ar === 'undefined' || !ar) return;
+	var m = mx || 50;
+	if (ar.length>=m) ar.shift();
+	ar.push(tw);
+	var out = '';
+	for (var t=ar.length-1; t>=0; t--) {
+		out += ar[t] +  +'<br/>' +'<br/>';
+	}
+	return out;
+}
+</script>
+</BODY>
+
+
+

@@ -1,0 +1,7 @@
+Server listening on port 3000
+twit.verifyCredentials data: [object Object]
+connected to socket.io server, socket id:0-ocQ7QBpgZZMEz_AAAA
+event w emitted, sym: %sfacebook
+closeTw(), map=[object Map]; sock=[object Object]; typeof map=object; typeof sock=object
+closeTw(), typeof map.get(sock.id)=undefined
+Monitoring Twitter for 'facebook'... Logging Twitter traffic.
